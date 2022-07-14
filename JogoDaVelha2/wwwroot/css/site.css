@@ -1,0 +1,83 @@
+html {
+  font-size: 14px;
+}
+
+@media (min-width: 768px) {
+  html {
+    font-size: 16px;
+  }
+}
+
+html {
+  position: relative;
+  min-height: 100%;
+}
+
+body {
+  margin-bottom: 60px;
+  background-color: darkkhaki;
+}
+
+p{
+    margin: 0px;
+}
+
+.corCinza{
+    background-color: darkgray;
+}
+
+.corCinzaClaro{
+    background-color: azure;
+    border-radius: 5px;
+}
+
+.botoes{
+    height: 70px;
+    width: 70px;
+    margin: 1px;
+    font-size: 35px;
+}
+
+.botoes:hover {
+    background-color: aquamarine;
+}
+
+.corX {
+    background-color: green;
+}
+
+.corY {
+    background-color: goldenrod;
+}
+
+.campoTexto{
+    width: 100%;
+}
+
+.centro{
+    text-align: center;
+}
+
+.alinhaEsquerda{
+    text-align: left;
+}
+
+.alinhaDireita {
+    text-align: right;
+}
+
+.margemSuperiorInferior10{
+    margin: 20px 0 20px 0;
+}
+
+.paddingIguais {
+    padding: 10px;
+}
+
+.paddingEsquerdaDireita{
+    padding: 5px 0 0 5px;
+}
+
+.paddingZero{
+    padding: 0px;
+}

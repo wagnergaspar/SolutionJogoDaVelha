@@ -1,0 +1,90 @@
+﻿
+@{
+    ViewData["Title"] = "Jogo";
+}
+
+<div class="row">
+
+    <div class="col-6">
+
+        <div v-if="jogo != null">
+
+            <h3>{{ jogo.mensagem }}</h3>
+
+            <br />
+
+            <p>Convide algum amigo(a) para jogar com você.</p>
+            <p>Basta inserir o e-mail do seu amigo(a) e clicar no botão "Convidar"</p>
+            <p>Seu / sua amigo(a) precisa estar logado(a).</p>
+
+            @*<p>Compartilhe o id do jogo com um amigo(a) para jogar com ele(a). {{ jogo.id }}</p>
+            <p>Seu id de usuário é: {{ jogo.idUser }}</p>
+
+            <div>
+                <input type="text" id="campoId" />
+                <input class="btn btn-success" type="button" @@click="buscarJogo()" value="Buscar jogo" />
+                <br />
+            </div>*@
+
+            <div class="row">
+                <div class="col-8">
+                    <input class="campoTexto" type="text" id="campoEmail" placeholder="Email" />
+                </div>
+                <div class="col-4">
+                    <input class="btn btn-success" id="liveToastBtn" type="button" @@click="convidarAmigo()" value="Convidar" />
+                </div>
+            </div>
+            <br />
+        </div>
+
+        <div v-else>
+            <p v-if="criarJogo()"></p>
+        </div>
+
+        <div id="app">
+
+            <div class="centro" v-if="jogo != null">
+
+                <!-- LINHA 0 -->
+
+                <a class="btn btn-light botoes" :class="{corX: jogadorX(0), corY: jogadorY(0)}" id="sendButton" @@click="jogar(0,0)">{{ jogo.vetor[0] }}</a>
+                <a class="btn btn-light botoes" :class="{corX: jogadorX(1), corY: jogadorY(1)}" id="sendButton" @@click="jogar(0,1)">{{ jogo.vetor[1] }}</a>
+                <a class="btn btn-light botoes" :class="{corX: jogadorX(2), corY: jogadorY(2)}" id="sendButton" @@click="jogar(0,2)">{{ jogo.vetor[2] }}</a>
+
+                <br />
+                <!-- LINHA 1 -->
+                <a class="btn btn-light botoes" :class="{corX: jogadorX(3), corY: jogadorY(3)}" id="sendButton" @@click="jogar(1,0)">{{ jogo.vetor[3] }}</a>
+                <a class="btn btn-light botoes" :class="{corX: jogadorX(4), corY: jogadorY(4)}" id="sendButton" @@click="jogar(1,1)">{{ jogo.vetor[4] }}</a>
+                <a class="btn btn-light botoes" :class="{corX: jogadorX(5), corY: jogadorY(5)}" id="sendButton" @@click="jogar(1,2)">{{ jogo.vetor[5] }}</a>
+
+                <br />
+                <!-- LINHA 2 -->
+                <a class="btn btn-light botoes" :class="{corX: jogadorX(6), corY: jogadorY(6)}" id="sendButton" @@click="jogar(2,0)">{{ jogo.vetor[6] }}</a>
+                <a class="btn btn-light botoes" :class="{corX: jogadorX(7), corY: jogadorY(7)}" id="sendButton" @@click="jogar(2,1)">{{ jogo.vetor[7] }}</a>
+                <a class="btn btn-light botoes" :class="{corX: jogadorX(8), corY: jogadorY(8)}" id="sendButton" @@click="jogar(2,2)">{{ jogo.vetor[8] }}</a>
+
+
+            </div>
+        </div>
+
+    </div>
+
+    <div class="corCinza col-6 paddingIguais">
+
+        <div class="container paddingZero">
+            <div class="row margemSuperiorInferior10">
+                <div class="col-2 paddingEsquerdaDireita">Message:</div>
+                <div class="col-7 paddingEsquerdaDireita"><input type="text" id="messageInput" class="campoTexto" placeholder="Mensagem..."/></div>
+                <div class="col-3 paddingEsquerdaDireita">
+                    <input type="button" class="btn btn-primary" id="idBotaoEnviarMsg" value="Enviar mensagem" @@click="enviarMensagem(null)" />
+                </div>
+            </div>
+        </div>
+
+        <div class="col-12 corCinzaClaro paddingIguais" id="messagesList">
+            <ul id="messagesList"></ul>
+        </div>
+
+    </div>
+
+</div>
