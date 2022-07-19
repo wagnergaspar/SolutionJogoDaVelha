@@ -4,11 +4,12 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - JogoDaVelha2</title>
-    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
-    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <link rel="stylesheet" href="~/css/geral.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/JogoDaVelha2.styles.css" asp-append-version="true" />
 
-    <script src="https://unpkg.com/vue@3"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.9.0/font/bootstrap-icons.css">
 
 </head>
 <body>
@@ -34,7 +35,7 @@
             </div>
         </nav>
     </header>
-    <div class="container" id="app">
+    <div class="container">
         <main role="main" class="pb-3">
             @RenderBody()
         </main>
@@ -42,233 +43,23 @@
 
     <footer class="border-top footer text-muted">
         <div class="container">
-            &copy; 2022 - JogoDaVelha2 - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+            &copy; 2022 - JogoDaVelha2 - <a asp-area="" asp-controller="Home" asp-action="Privacidade">Privacidade</a>
         </div>
     </footer>
-    <script src="~/lib/jquery/dist/jquery.min.js"></script>
-    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="~/js/site.js" asp-append-version="true"></script>
-    
+
+    <!-- versão mais recente -->
+    <script src="https://unpkg.com/vue@next"></script>
+
+    <!-- versão produção -->
+    <!--<script src="https://unpkg.com/vue@3.2.36"></script>-->
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+    <script src="~/js/requisicoes.js" asp-append-version="true"></script>
     <script src="~/js/signalr/dist/browser/signalr.js"></script>
-    <script src="~/js/chat.js"></script>
 
     @await RenderSectionAsync("Scripts", required: false)
+    @await RenderSectionAsync("Css", required: false)
 
 </body>
 </html>
 
-<script>
-
-    const { createApp } = Vue
-
-    createApp({
-        data() {
-            return {
-                jogo: null,
-                meuGuid: null,
-                guidAdversario: null,
-
-                //https://docs.microsoft.com/pt-br/aspnet/core/signalr/introduction?WT.mc_id=dotnet-35129-website&view=aspnetcore-6.0
-                connection: null,
-            }
-        },
-        methods: {
-            jogadorX(id) {
-                if (this.jogo.vetor[id] == 'x')
-                    return true;
-                return false;
-            },
-            jogadorY(id) {
-                if (this.jogo.vetor[id] == '0')
-                    return true;
-                return false;
-            },
-            async jogar(linha,coluna) {
-            
-                let retorno = await fetchData.fetchGetJson('jogo/jogar/'+this.jogo.id+'/'+linha+'/'+coluna);
-
-                if (retorno.ok) {
-                    this.jogo = retorno.retorno;
-
-                    // mensagem que não deve ser exibida na tela do usuário
-                    // usada para atualizar a tela do jogador que está aguardado
-                    const guid = '#' + this.jogo.id + '#';
-                    this.enviarMensagem(guid);
-                }
-            },
-
-            async convidarAmigo() {
-                var email = document.getElementById("campoEmail").value;
-                
-                let retorno = await fetchData.fetchGetJson('jogo/convidarAmigo/'+email);
-
-                if (retorno.ok) {
-                    console.log("Id: " + retorno.retorno.result.id);
-                    console.log("Email: " + retorno.retorno.result.email);
-
-                    this.guidAdversario = retorno.retorno.result.id;
-                    this.enviarMensagem(this.meuGuid);
-
-                    alert("Convite enviado com sucesso!");
-                }
-                else {
-                    console.log("Email não encontrado!");
-                    alert("Convite não enviado. Verifique se o e-mail está correto!");
-                }
-            },
-            async buscarJogo() {
-                var id = document.getElementById("campoId").value;
-                
-                let retorno = await fetchData.fetchGetJson('jogo/buscarJogo/'+id);
-
-                if (retorno.ok) {
-                    this.jogo = retorno.retorno;
-                }
-            },
-            async criarJogo() {
-
-                let retorno = await fetchData.fetchGetJson('jogo/novoJogo');
-
-                if (retorno.ok) {
-                    
-                    console.log("Meu id: " + retorno.retorno.idUser);
-
-                    this.jogo = retorno.retorno;
-                    this.meuGuid = retorno.retorno.idUser;
-                    //var message = document.getElementById("messageInput").value = retorno.retorno.id;
-                }
-                else {
-                    console.log("Não foi possível criar novo jogo ....");
-                }
-
-                this.iniciarComunicacao();
-            },
-            enviarMensagem(guid) {
-
-                var message = document.getElementById("messageInput").value;
-
-                document.getElementById("messageInput").value = "";
-
-                if (guid != null) 
-                    message = guid;
-
-                console.log("User: " + this.guidAdversario + " Message: " + message);
-
-                this.connection.invoke("SendPrivateMessage", this.guidAdversario, message).catch(function (err) {
-                    return console.error(err.toString());
-                });
-
-                if (guid == null) {
-                    // insere a mensagem em sua lista
-                    var p = document.createElement("p");
-                    p.classList.add('alinhaEsquerda');
-                    document.getElementById("messagesList").appendChild(p);
-                    p.textContent = `Você: ${message}`;
-                }
-            },
-            iniciarComunicacao() {
-
-                if (this.connection == null) {
-
-                    // Fonte: https://docs.microsoft.com/pt-br/aspnet/core/tutorials/signalr?view=aspnetcore-6.0&tabs=visual-studio
-
-                    "use strict";
-
-                    this.connection = new signalR.HubConnectionBuilder().withUrl("/chatHub").build();
-
-                    //Disable the send button until connection is established.
-                    //var botao1 = document.getElementById("sendButton");
-                    //if (botao1)
-                    //    botao1.disabled = true;
-
-                    /*
-                     https://www.w3schools.com/js/js_arrow_function.asp
-
-                     https://developer.mozilla.org/pt-BR/docs/Web/JavaScript/Reference/Functions/Arrow_functions
-                    */
-
-                    this.connection.on("ReceiveMessage", async (user, message) => {
-                        
-                        // We can assign user-supplied strings to an element's textContent because it
-                        // is not interpreted as markup. If you're assigning in any other way, you
-                        // should be aware of possible script injection concerns.
-
-                        //#11a5ac7a-ec15-4826-b289-cbeeb6e8d47f# = 38
-
-                        console.log("Recebido: " + message);
-                        const tracos = (message.match(/-/g) || []).length;
-                        const cerquilha = (message.match(/#/g) || []).length;
-
-                        console.log("Guid adversário: " + this.guidAdversario);
-                        console.log("traços: " + tracos);
-                        console.log("Tamanho da messagem? " + message.length);
-
-                        // atualiza jogo do adversário
-                        if (message.length == 38 && tracos == 4 && cerquilha == 2) {
-
-                            var guidLimpo = message.replace(/#/g, '');
-
-                            console.log("Atualizar jogo no adversário...");
-
-                            let retorno = await fetchData.fetchGetJson('jogo/jogar/'+guidLimpo+'/5/5');
-
-                            if (retorno.ok) {
-                                this.jogo = retorno.retorno;
-                            }
-                        }
-                        // envia o guid para o adversário para configurar envio de mensagens
-                        else if (message.length == 36 && tracos == 4 && this.guidAdversario == null) {
-                            console.log("Entrou no else if....");
-                            this.guidAdversario = message;
-                        }
-                        else {
-
-                            var p = document.createElement("p");
-
-                            console.log("User: " + user + "  Meu guid: " + this.meuGuid);
-
-                            if (user == this.meuGuid) {
-                                p.classList.add('alinhaDireita');
-                                document.getElementById("messagesList").appendChild(p);
-                                p.textContent = `${message} : Adiversário`;
-                            }
-                            else{
-                                p.classList.add('alinhaEsquerda');
-                                document.getElementById("messagesList").appendChild(p);
-                                p.textContent = `Você: ${message}`;
-                            }
-                        }
-                    });
-
-                    this.connection.start().then(function() {
-                        var botao2 = document.getElementById("sendButton");
-                        if (botao2)
-                            botao2.disabled = false;
-                    }).catch(function(err) {
-                        return console.error(err.toString());
-                    });
-                }
-            }
-        },
-        watch: {
-
-        },
-        beforeMount() {
-
-            document.addEventListener("keypress", function(e) {
-
-                // se a tecla Enter for pressionada
-                if(e.key === 'Enter') {
-  
-                    var btn = document.querySelector("#idBotaoEnviarMsg");
-    
-                    // ativa o botão de envio de mensagem
-                    btn.click();
-  
-                }
-            });
-
-        }
-    }).mount('#app')
-
-</script>

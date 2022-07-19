@@ -1,22 +1,3 @@
-html {
-  font-size: 14px;
-}
-
-@media (min-width: 768px) {
-  html {
-    font-size: 16px;
-  }
-}
-
-html {
-  position: relative;
-  min-height: 100%;
-}
-
-body {
-  margin-bottom: 60px;
-  background-color: darkkhaki;
-}
 
 p{
     margin: 0px;
@@ -43,15 +24,15 @@ p{
 }
 
 .corX {
-    background-color: green;
+    background-color: green !important;
 }
 
 .corY {
-    background-color: goldenrod;
+    background-color: goldenrod !important;
 }
 
 .campoTexto{
-    width: 100%;
+    width: 70%;
 }
 
 .centro{
@@ -64,10 +45,23 @@ p{
 
 .alinhaDireita {
     text-align: right;
+    background-color: khaki;
 }
 
-.margemSuperiorInferior10{
+.margemSuperiorInferior10 {
+    margin: 10px 0 10px 0;
+}
+
+.margemSuperiorInferior20{
     margin: 20px 0 20px 0;
+}
+
+.margemDireita10 {
+    margin-right: 10px;
+}
+
+.margemEsquerda10 {
+    margin-left: 10px;
 }
 
 .paddingIguais {
@@ -80,4 +74,12 @@ p{
 
 .paddingZero{
     padding: 0px;
+}
+
+.setaBuscar{
+    font-size: 1rem;
+}
+
+.ocuparEspaco{
+    flex-grow: 1;
 }

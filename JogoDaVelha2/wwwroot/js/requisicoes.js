@@ -86,7 +86,8 @@ const fetchData = {
             return dado;
         }
         else {
-            throw new Error(`${response.status} - ${response.statusText}`);
+            return null;
+            //throw new Error(`${response.status} - ${response.statusText}`);
         }
     }
 }

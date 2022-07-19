@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace JogoDaVelha2.Controllers
 {
     [Authorize]
-    public class JogoController : BaseController
+    public class JogoController : Controller
     {
         private static List<Jogo> jogos = new List<Jogo>();
 
@@ -25,21 +25,19 @@ namespace JogoDaVelha2.Controllers
         [HttpGet("/jogo/novoJogo")]
         public IActionResult NovoJogo(int id)
         {
-            var jogo = new Jogo();
+            Limpar();// exclui jogos criados a 1 hora ou mais
+
+            var jogo = new Jogo(User.Claims.First().Value);
             jogo.InicializarJogo();
-            jogo.IdUser = User.Claims.First().Value;
             jogos.Add(jogo);
 
-            var jogoSerializavel = jogo.JogoParaJogoSerializar();
-
-            return JsonReturnOnSucess(jogoSerializavel);
+            return Ok(jogo.JogoParaJogoSerializar());
         }
 
         [HttpGet("/jogo/buscarJogo/{guid}")]
         public IActionResult BuscarJogo(Guid guid)
         {
             Jogo? jogo = null;
-            JogoSerializar? jogoSerializavel = null;
 
             foreach (var j in jogos)
             {
@@ -51,9 +49,9 @@ namespace JogoDaVelha2.Controllers
             }
 
             if (jogo != null)
-                jogoSerializavel = jogo.JogoParaJogoSerializar();
+                return Ok(jogo.JogoParaJogoSerializar());
 
-            return JsonReturnOnSucess(jogoSerializavel);
+            return NotFound();
         }
 
         [HttpGet("/jogo/convidarAmigo/{email}")]
@@ -61,23 +59,27 @@ namespace JogoDaVelha2.Controllers
         {
             var user = _userManager.FindByEmailAsync(email);
 
-            return JsonReturnOnSucess(user);
+            if(user.Result != null)
+                return Ok(user);
+
+            return NotFound();
         }
 
         [HttpGet("/jogo/jogar/{guid}/{linha}/{coluna}")]
         public IActionResult Jogar(Guid guid, int linha, int coluna)
         {
             Jogo? jogo = null;
-            JogoSerializar? jogoSerializavel = null;
 
             foreach (var j in jogos)
             {
                 if (String.Equals(j.Id.ToString(),guid.ToString()))
                 {
                     jogo = j;
+                    jogo.StatusDaJogada = false;
                     if (jogo.CoordenadasValidas(linha, coluna))
                     {
                         jogo.Jogar(linha, coluna);
+                        jogo.StatusDaJogada = true;
 
                         if (jogo.Ganhou())
                         {
@@ -87,6 +89,7 @@ namespace JogoDaVelha2.Controllers
                         else if (jogo.Empatou())
                         {
                             jogo.Mensagem = "Poxa, empatou! Vocês são muito ruins!";
+                            jogo.Ganhador = 'e';
                         }
                         else
                         {
@@ -97,10 +100,17 @@ namespace JogoDaVelha2.Controllers
                 }
             }
 
-            if(jogo != null)
-                jogoSerializavel = jogo.JogoParaJogoSerializar();
+            if (jogo != null)
+                return Ok(jogo.JogoParaJogoSerializar());
 
-            return JsonReturnOnSucess(jogoSerializavel);
+            return NotFound();
+        }
+
+        private void Limpar()
+        {
+            // fonte: https://makolyte.com/system-invalidoperationexception-collection-was-modified-enumeration-operation-may-not-execute/
+            jogos.RemoveAll(jogo => jogo.PodeExcluir());
+
         }
     }
 }

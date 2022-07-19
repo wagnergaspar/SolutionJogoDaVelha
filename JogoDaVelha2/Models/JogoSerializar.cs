@@ -8,6 +8,8 @@ namespace JogoDaVelha2.Models
         [DataMember]
         public Guid Id { get; set; }
 
+        public bool StatusDaJogada { get; set; }
+
         public string IdUser { get; set; }
 
         [DataMember]
