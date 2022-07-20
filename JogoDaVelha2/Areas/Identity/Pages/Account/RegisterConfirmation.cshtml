@@ -1,23 +1,24 @@
 ﻿@page
 @model RegisterConfirmationModel
 @{
-    ViewData["Title"] = "Register confirmation";
+    ViewData["Title"] = "Confirmação de cadastro";
 }
 
 <h1>@ViewData["Title"]</h1>
 @{
     if (@Model.DisplayConfirmAccountLink)
     {
-<p>
-    This app does not currently have a real email sender registered, see <a href="https://aka.ms/aspaccountconf">these docs</a> for how to configure a real email sender.
-    Normally this would be emailed: <a id="confirm-link" href="@Model.EmailConfirmationUrl">Click here to confirm your account</a>
-</p>
+        <p>
+            Não foi implementado um serviço real de e-mail. Você não receberá nenhum e-mail de cadastro ou confirmação.
+            Normalmente a confirmação de identidade é feita enviando um email para o endereço informato com um link para ativar a conta.
+            Mas isso não irá ocorrer. <a id="confirm-link" href="@Model.EmailConfirmationUrl">Clique aqui para ativar sua conta</a>
+        </p>
     }
     else
     {
-<p>
-        Please check your email to confirm your account.
-</p>
+        <p>
+            Please check your email to confirm your account.
+        </p>
     }
 }
 

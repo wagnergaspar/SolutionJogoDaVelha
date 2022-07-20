@@ -90,4 +90,4 @@ const fetchData = {
             //throw new Error(`${response.status} - ${response.statusText}`);
         }
     }
-}
+};

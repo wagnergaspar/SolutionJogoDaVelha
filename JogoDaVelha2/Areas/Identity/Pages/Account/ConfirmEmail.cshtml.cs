@@ -44,7 +44,7 @@ namespace JogoDaVelha2.Areas.Identity.Pages.Account
 
             code = Encoding.UTF8.GetString(WebEncoders.Base64UrlDecode(code));
             var result = await _userManager.ConfirmEmailAsync(user, code);
-            StatusMessage = result.Succeeded ? "Thank you for confirming your email." : "Error confirming your email.";
+            StatusMessage = result.Succeeded ? "Obrigado por confirmar seu email. Agora você já pode logar e jogar :)" : "Erro ao confirmar seu email email.";
             return Page();
         }
     }
