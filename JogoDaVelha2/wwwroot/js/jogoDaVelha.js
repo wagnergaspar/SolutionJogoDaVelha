@@ -1,4 +1,8 @@
 ﻿
+
+// Como fazer deploy no azure
+//https://docs.microsoft.com/pt-br/aspnet/core/tutorials/publish-to-azure-webapp-using-vs?view=aspnetcore-6.0
+
 const {createApp} = Vue
 
 createApp({
@@ -29,7 +33,7 @@ createApp({
 
             if (retorno) {
 
-                console.log("Status da jogada: " + retorno.statusDaJogada + " linha: " + linha + " coluna: " + coluna);
+                //console.log("Status da jogada: " + retorno.statusDaJogada + " linha: " + linha + " coluna: " + coluna);
 
                 this.jogo = retorno;
 
@@ -40,11 +44,12 @@ createApp({
                     const guid = '#' + this.jogo.id + '#';
                     this.enviarMensagem(guid);
 
-                    console.log("Variável ganhador: " + this.jogo.ganhador);
+                    //console.log("Variável ganhador: " + this.jogo.ganhador);
                     this.atualizarBotoes(true);
                 }
                 else {
-                    console.log("Jogada não efetivada!");
+                    //console.log("Jogada não efetivada!");
+                    alert("Falha ao tentar enviar mensaagem. Se persistir tente logar novamente.");
                 }
             }
         },
@@ -57,7 +62,7 @@ createApp({
             Array.prototype.filter.call(botoes, (botao) => {
 
                 botao.value = this.jogo.vetor[id];
-                console.log("Botão " + id + ": " + botao.value);
+                //console.log("Botão " + id + ": " + botao.value);
                 id++;
 
                 if (this.jogo.ganhador == 'x' || this.jogo.ganhador == '0') {
@@ -67,7 +72,7 @@ createApp({
                     botao.disabled = true;
                 }
                 else {
-                    console.log("Status: " + status);
+                    //console.log("Status: " + status);
                     botao.disabled = status;
                 }
             });
@@ -81,8 +86,8 @@ createApp({
                 let retorno = await fetchData.fetchGetJson('jogo/convidarAmigo/' + email);
 
                 if (retorno != null) {
-                    console.log("Id: " + retorno.result.id);
-                    console.log("Email: " + retorno.result.email);
+                    //console.log("Id: " + retorno.result.id);
+                    //console.log("Email: " + retorno.result.email);
 
                     this.guidAdversario = retorno.result.id;
                     this.enviarMensagem(this.meuGuid);
@@ -90,7 +95,7 @@ createApp({
                     alert("Convite enviado com sucesso!");
                 }
                 else {
-                    console.log("Email não encontrado!");
+                    //console.log("Email não encontrado!");
                     alert("Email não encontrado. Verifique se o email está correto!");
                 }
             }
@@ -105,9 +110,11 @@ createApp({
             if (retorno) {
                 this.jogo = retorno;
                 this.atualizarBotoes(false);
+                console.log("Lista: " + retorno.tamanhoLista);
             }
             else {
-                console.log("Falha ao buscar jogo.");
+                //console.log("Falha ao buscar jogo.");
+                alert("Falha ao buscar jogo. Verifique sua conexão");
             }
         },
         iniciarComunicacao() {
@@ -139,37 +146,37 @@ createApp({
 
                     //#11a5ac7a-ec15-4826-b289-cbeeb6e8d47f# = 38
 
-                    console.log("Recebido: " + message);
+                    //console.log("Recebido: " + message);
                     const tracos = (message.match(/-/g) || []).length;
                     const cerquilha = (message.match(/#/g) || []).length;
 
-                    console.log("Guid adversário: " + this.guidAdversario);
-                    console.log("traços: " + tracos);
-                    console.log("Tamanho da messagem? " + message.length);
+                    //console.log("Guid adversário: " + this.guidAdversario);
+                    //console.log("traços: " + tracos);
+                    //console.log("Tamanho da messagem? " + message.length);
 
                     // atualiza jogo do adversário
                     if (message.length == 38 && tracos == 4 && cerquilha == 2) {
 
                         var guidLimpo = message.replace(/#/g, '');
 
-                        console.log("Atualizar jogo no adversário..." + guidLimpo);
+                        //console.log("Atualizar jogo no adversário..." + guidLimpo);
 
                         this.buscarJogo(guidLimpo);
                     }
                     // envia o guid para o adversário para configurar envio de mensagens
                     else if (message.length == 36 && tracos == 4 && this.guidAdversario == null) {
-                        console.log("Entrou no else if....");
+                        //console.log("Entrou no else if....");
                         this.guidAdversario = message;
                     }
                     else {
                         var p = document.createElement("p");
 
-                        console.log("User: " + user + "  Meu guid: " + this.meuGuid);
+                        //console.log("User: " + user + "  Meu guid: " + this.meuGuid);
 
                         if (user == this.meuGuid) {
                             p.classList.add('alinhaDireita');
                             document.getElementById("messagesList").appendChild(p);
-                            p.textContent = `${message} : Adiversário`;
+                            p.textContent = `${message} : Oponente`;
                         }
                         else {
                             p.classList.add('alinhaEsquerda');
@@ -194,14 +201,15 @@ createApp({
 
             if (retorno) {
 
-                console.log("Meu id: " + retorno.id);
+                //console.log("Meu id: " + retorno.id);
 
                 this.jogo = retorno;
                 this.meuGuid = retorno.idUser;
                 //var message = document.getElementById("messageInput").value = retorno.retorno.id;
             }
             else {
-                console.log("Não foi possível criar novo jogo ....");
+                //console.log("Não foi possível criar novo jogo ....");
+                alert("Falha ao criar jogo. Verifique sua conexão");
             }
 
             if (this.connection == null) {
@@ -221,7 +229,7 @@ createApp({
             if (guid != null)
                 message = guid;
 
-            console.log("User: " + this.guidAdversario + " Message: " + message);
+            //console.log("User: " + this.guidAdversario + " Message: " + message);
 
             this.connection.invoke("SendPrivateMessage", this.guidAdversario, message).catch(function (err) {
                 return console.error(err.toString());

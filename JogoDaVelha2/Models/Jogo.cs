@@ -20,6 +20,8 @@ namespace JogoDaVelha2.Models
 
         public DateTime Data { get; set; }
 
+        public int TamanhoLista { get; set; }
+
         public Jogo(String user)
         {
             Id = Guid.NewGuid();
@@ -152,6 +154,7 @@ namespace JogoDaVelha2.Models
             jogo.JogadorAtual = this.JogadorAtual;
             jogo.Ganhador = this.Ganhador;
             jogo.Mensagem = this.Mensagem;
+            jogo.TamanhoLista = this.TamanhoLista;
 
             jogo.Vetor[0] = this.Matriz[0, 0];
             jogo.Vetor[1] = this.Matriz[0, 1];

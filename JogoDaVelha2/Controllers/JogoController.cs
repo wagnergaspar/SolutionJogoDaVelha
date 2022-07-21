@@ -44,6 +44,7 @@ namespace JogoDaVelha2.Controllers
                 if (String.Equals(j.Id.ToString(), guid.ToString()))
                 {
                     jogo = j;
+                    jogo.TamanhoLista = jogos.Count;
                     continue;
                 }
             }

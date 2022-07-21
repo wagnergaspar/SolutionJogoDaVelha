@@ -24,6 +24,8 @@ namespace JogoDaVelha2.Models
         [DataMember]
         public string Mensagem { get; set; }
 
+        public int TamanhoLista { get; set; }
+
         public JogoSerializar()
         {
             Vetor = new char[9];

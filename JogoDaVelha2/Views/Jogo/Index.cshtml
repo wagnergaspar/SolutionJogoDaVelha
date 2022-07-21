@@ -19,7 +19,7 @@
 
             <div v-if="jogo != null">
 
-                <h3>{{ jogo.mensagem }}</h3>
+                <h3>Bem vindo ao Jogo da Velha online :)</h3>
 
                 <br />
 
@@ -46,12 +46,14 @@
                 </div>
 
                 <br />
+
+                <h3>{{ jogo.mensagem }}</h3>
+
             </div>
 
             <div v-else>
                 <p v-if="criarJogo()"></p>
             </div>
-
 
             <div class="centro" v-if="jogo != null">
 

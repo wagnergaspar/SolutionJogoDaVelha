@@ -1,8 +1,6 @@
 using JogoDaVelha2.Data;
 using JogoDaVelha2.Hubs;
-using JogoDaVelha2.Models;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -20,8 +18,8 @@ builder.Services.AddControllersWithViews();
 builder.Services.Configure<IdentityOptions>(options =>
 {
     // Default Password settings.
-    options.Password.RequireDigit = true;
-    options.Password.RequireLowercase = true;
+    options.Password.RequireDigit = false;
+    options.Password.RequireLowercase = false;
     options.Password.RequireNonAlphanumeric = false;
     options.Password.RequireUppercase = false;
     options.Password.RequiredLength = 6;
@@ -29,7 +27,6 @@ builder.Services.Configure<IdentityOptions>(options =>
 });
 
 builder.Services.AddSignalR();
-//builder.Services.AddSingleton<IUserIdProvider, EmailBasedUserIdProvider>();
 
 var app = builder.Build();
 
